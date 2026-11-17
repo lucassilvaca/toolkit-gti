@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Extras do MSI: início automático para todos os usuários + regras de firewall
+  do chat (TCP 7890).
+
+  IMPORTANTE: o linker do WiX só inclui um <Fragment> que alguém referencie.
+  `tauri.conf.json` referencia o componente AutoStartAllUsers (componentRefs),
+  e isso puxa o fragmento inteiro, inclusive as custom actions de firewall.
+  Até a 1.3.7 nada referenciava este arquivo e o MSI saía SEM as regras.
+
+  O app roda sem privilégio no PC do usuário (manifest asInvoker), então não
+  consegue criar a regra sozinho: ela tem que vir daqui.
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+
+  <Fragment>
+    <!-- Logon de qualquer usuário: sobe só bandeja + chat (o argumento autostart esconde a janela). -->
+    <DirectoryRef Id="INSTALLDIR">
+      <Component Id="AutoStartAllUsers" Guid="*" Win64="yes">
+        <RegistryValue Root="HKLM"
+                       Key="Software\Microsoft\Windows\CurrentVersion\Run"
+                       Name="ToolkitGTI"
+                       Type="string"
+                       Value="&quot;[INSTALLDIR]toolkit-gti.exe&quot; --autostart"
+                       KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <!-- Apaga antes de criar: `netsh add` repetido duplicaria a regra a cada reinstalação. -->
+    <SetProperty Id="RemoveFirewallRuleIn7890"
+      Value="&quot;[System64Folder]netsh.exe&quot; advfirewall firewall delete rule name=&quot;Toolkit GTI Chat WS 7890&quot;"
+      Before="RemoveFirewallRuleIn7890"
+      Sequence="execute" />
+
+    <SetProperty Id="RemoveFirewallRuleOut7890"
+      Value="&quot;[System64Folder]netsh.exe&quot; advfirewall firewall delete rule name=&quot;Toolkit GTI Chat WS 7890 Out&quot;"
+      Before="RemoveFirewallRuleOut7890"
+      Sequence="execute" />
+
+    <SetProperty Id="AddFirewallRuleIn7890"
+      Value="&quot;[System64Folder]netsh.exe&quot; advfirewall firewall add rule name=&quot;Toolkit GTI Chat WS 7890&quot; protocol=TCP dir=in localport=7890 action=allow profile=any description=&quot;Chat HTTP/WS do Toolkit GTI&quot;"
+      Before="AddFirewallRuleIn7890"
+      Sequence="execute" />
+
+    <SetProperty Id="AddFirewallRuleOut7890"
+      Value="&quot;[System64Folder]netsh.exe&quot; advfirewall firewall add rule name=&quot;Toolkit GTI Chat WS 7890 Out&quot; protocol=TCP dir=out localport=7890 action=allow profile=any description=&quot;Chat HTTP/WS do Toolkit GTI saida&quot;"
+      Before="AddFirewallRuleOut7890"
+      Sequence="execute" />
+
+    <CustomAction Id="RemoveFirewallRuleIn7890" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" />
+    <CustomAction Id="RemoveFirewallRuleOut7890" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" />
+    <CustomAction Id="AddFirewallRuleIn7890" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" />
+    <CustomAction Id="AddFirewallRuleOut7890" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Impersonate="no" Return="ignore" />
+
+    <InstallExecuteSequence>
+      <!-- Instalação, reparo e desinstalação: remove (ignora se não existir). -->
+      <Custom Action="RemoveFirewallRuleIn7890" Before="AddFirewallRuleIn7890" />
+      <Custom Action="RemoveFirewallRuleOut7890" Before="AddFirewallRuleOut7890" />
+      <!-- Só instalação/reparo: recria. -->
+      <Custom Action="AddFirewallRuleIn7890" Before="InstallFinalize"><![CDATA[NOT REMOVE]]></Custom>
+      <Custom Action="AddFirewallRuleOut7890" After="AddFirewallRuleIn7890"><![CDATA[NOT REMOVE]]></Custom>
+    </InstallExecuteSequence>
+  </Fragment>
+
+</Wix>

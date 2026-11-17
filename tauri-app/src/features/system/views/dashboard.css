@@ -1,0 +1,18 @@
+.dashboard-layout { container-type: inline-size; }
+.dashboard-identity { flex-basis: 100%; }
+.dashboard-metrics, .dashboard-details { display: grid; grid-template-columns: minmax(0, 1fr); }
+.dashboard-metric + .dashboard-metric { border-top: 1px solid; border-color: theme('colors.line.DEFAULT'); }
+.dashboard-network-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: theme('spacing.1'); padding-block: theme('spacing.3'); }
+.dashboard-network-row + .dashboard-network-row { border-top: 1px solid; border-color: theme('colors.line.DEFAULT'); }
+@container (min-width: 42rem) {
+  .dashboard-identity { flex-basis: auto; }
+  .dashboard-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .dashboard-metric + .dashboard-metric { border-top: 0; border-left: 1px solid; border-color: theme('colors.line.DEFAULT'); }
+  .dashboard-details { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container (min-width: 24rem) {
+  .dashboard-network-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: theme('spacing.3'); }
+}
+@container (min-width: 42rem) and (max-width: 54rem) {
+  .dashboard-metric-header { min-height: theme('spacing.20'); align-content: flex-start; }
+}

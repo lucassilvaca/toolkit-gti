@@ -1,0 +1,30 @@
+# Dependências
+node_modules/
+
+# Build do frontend
+tauri-app/dist/
+tauri-app/.vite/
+
+# Build do Rust
+tauri-app/src-tauri/target/
+
+# Relatórios de teste
+tauri-app/coverage/
+tauri-app/playwright-report/
+tauri-app/test-results/
+
+# Instaladores e binários
+*.msi
+*.exe
+
+# Ambiente e logs
+.env
+.env.*
+*.log
+
+# Sistema e IDE
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

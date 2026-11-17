@@ -1,0 +1,297 @@
+@import "@fontsource-variable/dm-sans";
+@import "@fontsource-variable/fraunces";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Identidade "Verde-azulado" (2026-11)
+ * Tema claro: fundo verde-acinzentado pálido, cards brancos com sombra difusa, títulos em
+ * Fraunces, interface em DM Sans. Verde-azulado escuro (#134e4a) e médio (#0f766e) são
+ * as únicas cores de marca; verde/âmbar/vermelho ficam só para status.
+ * Os valores canônicos vivem em tailwind.config.js (tokens semânticos).
+ */
+
+@layer base {
+  :root {
+    --accent: #0f766e;
+    --accent-strong: #134e4a;
+    --accent-tint: #d5efea;
+    --shadow-soft: 0 10px 40px rgba(19, 78, 74, 0.08);
+    color-scheme: light;
+  }
+
+  html {
+    font-family: "DM Sans Variable", "DM Sans", "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    overflow: hidden;
+    user-select: none;
+    background:
+      radial-gradient(60% 50% at 100% 0%, rgba(15, 118, 110, 0.07), transparent 70%),
+      radial-gradient(50% 40% at 0% 100%, rgba(19, 78, 74, 0.05), transparent 70%),
+      #f4f8f7;
+    color: #34433f;
+    line-height: 1.5;
+  }
+
+  ::selection {
+    background: rgba(15, 118, 110, 0.22);
+    color: #13201e;
+  }
+}
+
+@layer utilities {
+  /* Anel de foco padrão (acessibilidade) — único valor em todo o app. */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(15,118,110,0.35)] focus-visible:ring-offset-2 focus-visible:ring-offset-base;
+  }
+
+  /* Scroll funcional, sem barras visíveis (webkit + Firefox + IE/Edge legado). */
+  .scrollbar-thin { scrollbar-width: none; -ms-overflow-style: none; }
+  .scrollbar-thin::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  ::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
+  .animate-in { animation-fill-mode: both; }
+  .fade-in { animation: fadeIn 0.4s ease-out; }
+  .slide-in-from-bottom-4 { animation: slideInFromBottom 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+  .slide-in-from-left-2 { animation: slideInFromLeft 0.3s ease-out; }
+  .fill-mode-forwards { animation-fill-mode: forwards; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideInFromBottom {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes slideInFromLeft {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Títulos editoriais (Fraunces). */
+  .font-display {
+    font-family: "Fraunces Variable", "Fraunces", Georgia, serif;
+    font-optical-sizing: auto;
+    letter-spacing: -0.02em;
+  }
+
+  /* Superfícies — classes legadas mantidas, agora no visual verde-azulado. */
+  .premium-shell,
+  .premium-panel,
+  .premium-card {
+    background: #ffffff;
+    border: 1px solid rgba(220, 232, 229, 0.9);
+    border-radius: 28px;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .premium-chip {
+    border: 1px solid #dce8e5;
+    background: #f8fbfa;
+  }
+
+  .brand-pill {
+    background: var(--accent);
+    color: #ffffff;
+    box-shadow: 0 10px 24px rgba(15, 118, 110, 0.25);
+  }
+
+  .brand-outline {
+    border: 1px solid #dce8e5;
+  }
+
+  /** Menu lateral: item ativo em pílula verde-azulada, demais discretos. */
+  .menu-item {
+    color: #4f5f5b;
+    background: transparent;
+    border-radius: 16px;
+    transition:
+      color 150ms cubic-bezier(0.23, 1, 0.32, 1),
+      background-color 150ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .menu-item:hover {
+    color: #13201e;
+    background: #f8fbfa;
+  }
+
+  .menu-item-active {
+    color: #134e4a;
+    background: #d5efea;
+    font-weight: 600;
+  }
+
+  /** Botões padrão globais (hierarquia consistente). */
+  .btn-ghost,
+  .btn-accent {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding-inline: 1.15rem;
+    font-weight: 600;
+    line-height: 1;
+    border-radius: 16px;
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 220ms ease,
+      color 180ms ease,
+      transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .btn-ghost {
+    border: 1px solid #dce8e5;
+    background: #f8fbfa;
+    color: #13201e;
+  }
+
+  .btn-ghost:hover {
+    background: #d5efea;
+    border-color: #b9d6d0;
+    color: #134e4a;
+  }
+
+  /* Efeito de brilho deslizante adaptado do Uiverse (uiverse.io, MIT). */
+  .btn-accent {
+    overflow: hidden;
+    border: 0;
+    background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+    color: #ffffff;
+    box-shadow: 0 8px 22px rgba(15, 118, 110, 0.28);
+  }
+
+  .btn-accent::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.35) 50%, transparent 80%);
+    transform: translateX(-120%);
+    transition: transform 650ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .btn-accent:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px rgba(15, 118, 110, 0.36);
+  }
+
+  .btn-accent:hover::before {
+    transform: translateX(120%);
+  }
+
+  .btn-accent:active,
+  .btn-ghost:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  /** Linhas de lista e caixas de métrica. */
+  .pulse-row,
+  .pulse-metric-tile {
+    border-radius: 16px;
+    border: 1px solid #dce8e5;
+    background: #f8fbfa;
+  }
+
+  /* Radar da varredura de rede — adaptado do Uiverse (mrhyddenn, uiverse.io, MIT). */
+  .radar {
+    position: relative;
+    width: var(--radar-size, 120px);
+    height: var(--radar-size, 120px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 1px solid #b9d6d0;
+    background: radial-gradient(circle, #ffffff 0%, #f8fbfa 70%);
+    box-shadow: 0 10px 40px rgba(19, 78, 74, 0.08);
+  }
+
+  .radar::before,
+  .radar::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    border: 1px dashed #dce8e5;
+  }
+
+  .radar::before { inset: 16%; }
+  .radar::after { inset: 36%; }
+
+  .radar > span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    transform-origin: top left;
+    border-top: 1px solid rgba(15, 118, 110, 0.55);
+    animation: radar-sweep 2.4s linear infinite;
+  }
+
+  .radar > span::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform-origin: top left;
+    transform: rotate(-55deg);
+    background: #0f766e;
+    opacity: 0.35;
+    filter: blur(22px);
+  }
+
+  @keyframes radar-sweep {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Três pontos pulsando — adaptado do Uiverse (Praashoo7, uiverse.io, MIT). */
+  .dots-loader {
+    display: inline-flex;
+    gap: 0.35em;
+  }
+
+  .dots-loader > span {
+    width: 0.55em;
+    height: 0.55em;
+    border-radius: 50%;
+    background: #0f766e;
+    scale: 0;
+    animation: dots-pulse 1.4s ease-in-out infinite;
+  }
+
+  .dots-loader > span:nth-child(2) { animation-delay: 0.2s; background: #115e59; }
+  .dots-loader > span:nth-child(3) { animation-delay: 0.4s; background: #134e4a; }
+
+  @keyframes dots-pulse {
+    0%, 100% { scale: 0.3; opacity: 0.5; }
+    50% { scale: 1; opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-accent::before { display: none; }
+    .btn-accent,
+    .btn-ghost { transition: none; }
+    .radar > span { animation-duration: 8s; }
+    .dots-loader > span { animation: none; scale: 1; }
+  }
+}
+
+@supports not (backdrop-filter: blur(12px)) {
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  .backdrop-blur-3xl {
+    background-color: rgba(255, 255, 255, 0.96);
+  }
+}

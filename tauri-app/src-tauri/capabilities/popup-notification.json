@@ -1,0 +1,6 @@
+{
+  "identifier": "popup-notification",
+  "description": "Capabilities for the popup notification window",
+  "windows": ["popup-notification"],
+  "permissions": ["core:default", "core:window:allow-close"]
+}

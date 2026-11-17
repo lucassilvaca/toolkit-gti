@@ -1,0 +1,10 @@
+{
+  "identifier": "chat-invite",
+  "description": "Capabilities for the chat invite popup window",
+  "windows": ["chat-invite"],
+  "permissions": [
+    "core:default",
+    "core:window:allow-close",
+    "core:event:allow-emit"
+  ]
+}

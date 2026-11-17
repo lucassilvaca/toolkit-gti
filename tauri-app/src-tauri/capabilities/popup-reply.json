@@ -1,0 +1,6 @@
+{
+  "identifier": "popup-reply",
+  "description": "Capabilities for the popup reply window",
+  "windows": ["popup-reply"],
+  "permissions": ["core:default", "core:window:allow-close"]
+}
